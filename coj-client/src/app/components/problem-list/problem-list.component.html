@@ -1,0 +1,10 @@
+<div class="container">
+  <div class="list-group">
+    <a class="list-group-item" *ngFor="let problem of problems">
+
+      {{problem.id}}. {{problem.name}}
+      <span class="pull-right difficulty difficulty-{{problem.difficulty}}">{{problem.difficulty}}</span>
+    </a>
+  </div>
+</div>
+

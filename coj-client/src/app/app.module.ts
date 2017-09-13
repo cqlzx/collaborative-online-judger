@@ -1,7 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
-import {DataService} from './services/data.service';
+import { DataService } from './services/data.service';
 
 import { ROUTING } from './app.routes';
 
@@ -23,7 +24,8 @@ import { ContributeFormComponent } from './components/contribute-form/contribute
   ],
   imports: [
     BrowserModule,
-    ROUTING
+    ROUTING,
+    FormsModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

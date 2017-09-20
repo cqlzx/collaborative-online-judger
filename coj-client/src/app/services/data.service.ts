@@ -27,7 +27,7 @@ export class DataService {
     return this.http.get(`api/v1/problems/${id}`)
       .toPromise()
       .then((res: Response) => {
-        res.json();
+        return res.json();
       })
       .catch(this.handleError);
   }

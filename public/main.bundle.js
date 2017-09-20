@@ -237,10 +237,11 @@ var ContributeFormComponent = (function () {
     ContributeFormComponent.prototype.ngOnInit = function () {
     };
     ContributeFormComponent.prototype.addProblem = function () {
+        var _this = this;
         this.dataService.addProblem(this.newProblem)
+            .then(function (problem) { return _this.router.navigate(['/problems']); })
             .catch(function (error) { return console.log(error); });
         this.newProblem = Object.assign({}, DEFAULT_PROBLEM);
-        this.router.navigate(['/problems']);
     };
     return ContributeFormComponent;
 }());
@@ -373,7 +374,9 @@ var ProblemDetailComponent = (function () {
         var _this = this;
         this.route.params.subscribe(function (params) {
             _this.dataService.getProblem(+params['id'])
-                .then(function (problem) { return _this.problem = problem; });
+                .then(function (problem) {
+                _this.problem = problem;
+            });
         });
     };
     return ProblemDetailComponent;
@@ -506,7 +509,7 @@ var DataService = (function () {
         return this.http.get("api/v1/problems/" + id)
             .toPromise()
             .then(function (res) {
-            res.json();
+            return res.json();
         })
             .catch(this.handleError);
     };

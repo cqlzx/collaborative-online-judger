@@ -28,9 +28,9 @@ export class ContributeFormComponent implements OnInit {
 
   addProblem(): void {
     this.dataService.addProblem(this.newProblem)
+      .then((problem) => this.router.navigate(['/problems']))
       .catch(error => console.log(error));
     this.newProblem = Object.assign({}, DEFAULT_PROBLEM);
-    this.router.navigate(['/problems']);
   }
 
 }

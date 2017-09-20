@@ -93,7 +93,7 @@ const addProblem = function (newProblem) {
                     newProblem.id = total + 1;
                     const mongoProblem = new ProblemModel(newProblem);
                     mongoProblem.save();
-                    resolve(newProblem);
+                    resolve(mongoProblem);
                 })
             }
         })

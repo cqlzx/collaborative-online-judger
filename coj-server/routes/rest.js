@@ -24,7 +24,8 @@ router.post('/problems', jsonParser, function (req, res) {
     problemService.addProblem(req.body)
         .then(problem => {
             res.json(problem);
-        }, error => {
+        })
+        .catch(error => {
             res.status(400).send(error);
         });
 });

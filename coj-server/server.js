@@ -1,5 +1,8 @@
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://root:123@ds139904.mlab.com:39904/dbcoj');
+
 const restRouter = require('./routes/rest');
 
 

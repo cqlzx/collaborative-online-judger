@@ -15,7 +15,8 @@ router.get('/problems', function (req, res) {
 //GET /api/v1/problems/:id
 router.get('/problems/:id', function (req, res) {
     const id = req.params['id'];
-    problemService.getProblem(+id);
+    problemService.getProblem(+id)
+        .then(problem => res.json(problem));
 });
 
 //POST /api/v1/problems
@@ -24,7 +25,7 @@ router.post('/problems', jsonParser, function (req, res) {
         .then(problem => {
             res.json(problem);
         }, error => {
-            res.status(400).send('Problem name already exists!');
+            res.status(400).send(error);
         });
 });
 

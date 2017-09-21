@@ -447,8 +447,11 @@ var ProblemListComponent = (function () {
     };
     ProblemListComponent.prototype.getProblem = function () {
         var _this = this;
-        this.dataService.getProblems()
+        this.subscription = this.dataService.getProblems()
             .subscribe(function (problems) { return _this.problems = problems; });
+    };
+    ProblemListComponent.prototype.ngOnDestroy = function () {
+        this.subscription.unsubscribe();
     };
     return ProblemListComponent;
 }());

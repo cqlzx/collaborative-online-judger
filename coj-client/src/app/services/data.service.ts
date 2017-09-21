@@ -23,6 +23,7 @@ export class DataService {
 
       return this._problemSource.asObservable();
   }
+
   getProblem(id: number): Promise<Problem> {
     return this.http.get(`api/v1/problems/${id}`)
       .toPromise()

@@ -12,6 +12,7 @@ import { ProblemListComponent } from './components/problem-list/problem-list.com
 import { ProblemDetailComponent } from './components/problem-detail/problem-detail.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { ContributeFormComponent } from './components/contribute-form/contribute-form.component';
+import { EditorComponent } from './components/editor/editor.component';
 
 
 
@@ -21,7 +22,8 @@ import { ContributeFormComponent } from './components/contribute-form/contribute
     ProblemListComponent,
     ProblemDetailComponent,
     NavBarComponent,
-    ContributeFormComponent
+    ContributeFormComponent,
+    EditorComponent
   ],
   imports: [
     BrowserModule,

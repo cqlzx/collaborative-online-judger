@@ -1,0 +1,22 @@
+@media screen {
+  #editor {
+    height: 600px
+  }
+
+  header {
+    margin: 10px 0;
+    height: 40px;
+  }
+
+  footer {
+    margin: 10px 0;
+  }
+
+  #languageSelect {
+    width: 150px;
+  }
+
+  .language-select {
+    margin: 0 20px 5px 0;
+  }
+}

@@ -89,12 +89,14 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_problem_detail_problem_detail_component__ = __webpack_require__("../../../../../src/app/components/problem-detail/problem-detail.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_nav_bar_nav_bar_component__ = __webpack_require__("../../../../../src/app/components/nav-bar/nav-bar.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_contribute_form_contribute_form_component__ = __webpack_require__("../../../../../src/app/components/contribute-form/contribute-form.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__components_editor_editor_component__ = __webpack_require__("../../../../../src/app/components/editor/editor.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -118,7 +120,8 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_7__components_problem_list_problem_list_component__["a" /* ProblemListComponent */],
             __WEBPACK_IMPORTED_MODULE_8__components_problem_detail_problem_detail_component__["a" /* ProblemDetailComponent */],
             __WEBPACK_IMPORTED_MODULE_9__components_nav_bar_nav_bar_component__["a" /* NavBarComponent */],
-            __WEBPACK_IMPORTED_MODULE_10__components_contribute_form_contribute_form_component__["a" /* ContributeFormComponent */]
+            __WEBPACK_IMPORTED_MODULE_10__components_contribute_form_contribute_form_component__["a" /* ContributeFormComponent */],
+            __WEBPACK_IMPORTED_MODULE_11__components_editor_editor_component__["a" /* EditorComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -259,6 +262,90 @@ var _a, _b;
 
 /***/ }),
 
+/***/ "../../../../../src/app/components/editor/editor.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "@media screen {\n  #editor {\n    height: 600px\n  }\n\n  header {\n    margin: 10px 0;\n    height: 40px;\n  }\n\n  footer {\n    margin: 10px 0;\n  }\n\n  #languageSelect {\n    width: 150px;\n  }\n\n  .language-select {\n    margin: 0 20px 5px 0;\n  }\n}\n", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/components/editor/editor.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<section>\n  <header>\n    <select class=\"form-control pull-left language-select\" id=\"languageSelect\" name=\"languageSelect\"\n      (change)=\"setLanguage(language)\" [(ngModel)]=\"language\">\n      <option *ngFor=\"let language of languages\" [value]=\"language\">{{language}}</option>\n    </select>\n\n    <button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#myModal\">\n      Reset\n    </button>\n\n    <!-- Modal -->\n    <div class=\"modal fade\" id=\"myModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\n      <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content\">\n          <div class=\"modal-header\">\n            <h5 class=\"modal-title\" id=\"exampleModalLabel\">Reset to default code</h5>\n            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n              <span aria-hidden=\"true\">&times;</span>\n            </button>\n          </div>\n          <div class=\"modal-body\">\n            Are your sure you want to reset your code?\n          </div>\n          <div class=\"modal-footer\">\n            <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Cancel</button>\n            <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" (click)=\"resetEditor()\">Reset</button>\n          </div>\n        </div>\n      </div>\n    </div>\n\n  </header>\n\n  <div class=\"row\">\n    <div id=\"editor\"></div>\n  </div>\n\n  <footer>\n    <button type=\"button\" class=\"btn btn-success pull-right\" (click)=\"submit()\">Submit</button>\n  </footer>\n</section>\n\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/components/editor/editor.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EditorComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var EditorComponent = (function () {
+    function EditorComponent() {
+        this.language = 'Java';
+        this.languages = ['Java', 'Python', 'Javascript'];
+        this.defaultContent = {
+            'Java': "public class Solution {\n    public static void main(String[] args) {\n        //Your code starts here...\n    }\n}",
+            'Python': "class Solution(object):\n    def main():\n        # Your code start here...",
+            'Javascript': "var solution = function() {\n    //Your code start here...\n};"
+        };
+    }
+    EditorComponent.prototype.ngOnInit = function () {
+        this.editor = ace.edit('editor');
+        this.editor.setTheme('ace/theme/textmate');
+        this.editor.$blockScrolling = Infinity;
+        this.setLanguage(this.language);
+    };
+    EditorComponent.prototype.setLanguage = function (language) {
+        this.language = language;
+        this.editor.getSession().setMode('ace/mode/' + this.language.toLocaleLowerCase());
+        this.resetEditor();
+    };
+    EditorComponent.prototype.resetEditor = function () {
+        this.editor.setValue(this.defaultContent[this.language]);
+    };
+    EditorComponent.prototype.submit = function () {
+        var userCode = this.editor.getValue();
+        console.log(userCode);
+    };
+    return EditorComponent;
+}());
+EditorComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* Component */])({
+        selector: 'app-editor',
+        template: __webpack_require__("../../../../../src/app/components/editor/editor.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/components/editor/editor.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], EditorComponent);
+
+//# sourceMappingURL=editor.component.js.map
+
+/***/ }),
+
 /***/ "../../../../../src/app/components/nav-bar/nav-bar.component.css":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -341,7 +428,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/components/problem-detail/problem-detail.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\" *ngIf=\"problem\">\n  <div class=\"col-xs-12 col-md-6\">\n    <h2>\n      {{problem.name}}\n    </h2>\n    <p>\n      {{problem.description}}\n    </p>\n  </div>\n</div>\n\n"
+module.exports = "<div class=\"container\" *ngIf=\"problem\">\n  <div class=\"col-xs-12 col-md-4\">\n    <h2>\n      {{problem.name}}\n    </h2>\n    <p>\n      {{problem.description}}\n    </p>\n  </div>\n\n  <div class=\"hidden-xs col-sm-12 col-md-8\">\n    <app-editor></app-editor>\n  </div>\n</div>\n\n"
 
 /***/ }),
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CollaborationService } from '../../services/collaboration.service';
 
 declare let ace: any;
 
@@ -25,13 +26,17 @@ export class EditorComponent implements OnInit {
 };`
   };
 
-  constructor() { }
+  constructor(
+    private collaborationService: CollaborationService
+  ) { }
 
   ngOnInit() {
     this.editor = ace.edit('editor');
     this.editor.setTheme('ace/theme/textmate');
     this.editor.$blockScrolling = Infinity;
     this.setLanguage(this.language);
+
+    this.collaborationService.init();
   }
 
   setLanguage(language: string) {

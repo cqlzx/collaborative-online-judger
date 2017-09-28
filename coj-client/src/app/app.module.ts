@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { DataService } from './services/data.service';
+import { CollaborationService } from './services/collaboration.service';
 
 import { ROUTING } from './app.routes';
 
@@ -13,6 +14,7 @@ import { ProblemDetailComponent } from './components/problem-detail/problem-deta
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { ContributeFormComponent } from './components/contribute-form/contribute-form.component';
 import { EditorComponent } from './components/editor/editor.component';
+
 
 
 
@@ -31,7 +33,10 @@ import { EditorComponent } from './components/editor/editor.component';
     FormsModule,
     HttpModule
   ],
-  providers: [DataService],
+  providers: [
+    DataService,
+    CollaborationService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

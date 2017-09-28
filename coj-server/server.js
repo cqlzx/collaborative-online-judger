@@ -13,6 +13,26 @@ app.use('/api/v1', restRouter);
 app.use(function(req, res, next) {
    res.sendFile('index.html', { root: path.join(__dirname, '../public')});
 });
-app.listen(3000, function () {
-    console.log('Example app listening on port 3000!');
-});
+
+// app.listen(3000, function () {
+//     console.log('Example app listening on port 3000!');
+// });
+
+const http = require('http');
+const SocketIO = require('socket.io');
+const io = new SocketIO();
+const editorSocketService = require('./services/editSocketService')(io);
+server = http.createServer(app);
+io.attach(server);
+server.listen(3000);
+server.on('error', errorHandler);
+server.on('listening', listenHandler);
+
+function errorHandler(error) {
+    throw error;
+}
+
+function listenHandler() {
+    const address = server.address();
+    console.log('listening to ' + address.port);
+}

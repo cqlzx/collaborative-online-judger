@@ -8,11 +8,25 @@ export class CollaborationService {
 
   constructor() { }
 
-  init() {
-    this.collaborationSocket = io(window.location.origin, { query : 'message=hehe'});
+  // init() {
+  //   this.collaborationSocket = io(window.location.origin, { query : 'message=hehe'});
+  //
+  //   this.collaborationSocket.on('message', (message) => {
+  //       console.log('message received from server ' + message);
+  //   });
+  // }
 
-    this.collaborationSocket.on('message', (message) => {
-        console.log('message received from server ' + message);
+  init(sessionId: string, editor: any) {
+    this.collaborationSocket = io(window.location.origin, { query : 'sessionId=' + sessionId});
+
+    this.collaborationSocket.on('change', (delta) => {
+      delta = JSON.parse(delta);
+      editor.lastAppliedChange = delta;
+      editor.getSession().getDocument().applyDeltas([delta]);
     });
+  }
+
+  change(delta: string) {
+    this.collaborationSocket.emit('change', delta);
   }
 }

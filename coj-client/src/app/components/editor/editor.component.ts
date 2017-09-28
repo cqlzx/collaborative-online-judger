@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CollaborationService } from '../../services/collaboration.service';
+import { ActivatedRoute, Params } from '@angular/router';
 
 declare let ace: any;
 
@@ -10,6 +11,7 @@ declare let ace: any;
 })
 export class EditorComponent implements OnInit {
   editor: any;
+  sessionId: string;
   language = 'Java';
   languages: string[] = ['Java', 'Python', 'Javascript'];
   defaultContent = {
@@ -27,16 +29,33 @@ export class EditorComponent implements OnInit {
   };
 
   constructor(
-    private collaborationService: CollaborationService
+    private collaborationService: CollaborationService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.sessionId = params['id'];
+      this.initEditor();
+    });
+  }
+
+  initEditor() {
     this.editor = ace.edit('editor');
     this.editor.setTheme('ace/theme/textmate');
     this.editor.$blockScrolling = Infinity;
     this.setLanguage(this.language);
 
-    this.collaborationService.init();
+    this.collaborationService.init(this.sessionId, this.editor);
+
+    this.editor.lastAppliedChange = null;
+
+    this.editor.on('change', (e) => {
+      console.log('change from client' + JSON.stringify(e));
+      if (this.editor.lastAppliedChange != e) {
+        this.collaborationService.change(JSON.stringify(e));
+      }
+    });
   }
 
   setLanguage(language: string) {

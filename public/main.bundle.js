@@ -299,6 +299,7 @@ module.exports = "<section>\n  <header>\n    <select class=\"form-control pull-l
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EditorComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_collaboration_service__ = __webpack_require__("../../../../../src/app/services/collaboration.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -310,9 +311,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var EditorComponent = (function () {
-    function EditorComponent(collaborationService) {
+    function EditorComponent(collaborationService, route) {
         this.collaborationService = collaborationService;
+        this.route = route;
         this.language = 'Java';
         this.languages = ['Java', 'Python', 'Javascript'];
         this.defaultContent = {
@@ -322,11 +325,26 @@ var EditorComponent = (function () {
         };
     }
     EditorComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.route.params.subscribe(function (params) {
+            _this.sessionId = params['id'];
+            _this.initEditor();
+        });
+    };
+    EditorComponent.prototype.initEditor = function () {
+        var _this = this;
         this.editor = ace.edit('editor');
         this.editor.setTheme('ace/theme/textmate');
         this.editor.$blockScrolling = Infinity;
         this.setLanguage(this.language);
-        this.collaborationService.init();
+        this.collaborationService.init(this.sessionId, this.editor);
+        this.editor.lastAppliedChange = null;
+        this.editor.on('change', function (e) {
+            console.log('change from client' + JSON.stringify(e));
+            if (_this.editor.lastAppliedChange != e) {
+                _this.collaborationService.change(JSON.stringify(e));
+            }
+        });
     };
     EditorComponent.prototype.setLanguage = function (language) {
         this.language = language;
@@ -348,10 +366,10 @@ EditorComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/components/editor/editor.component.html"),
         styles: [__webpack_require__("../../../../../src/app/components/editor/editor.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__services_collaboration_service__["a" /* CollaborationService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_collaboration_service__["a" /* CollaborationService */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__services_collaboration_service__["a" /* CollaborationService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_collaboration_service__["a" /* CollaborationService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object])
 ], EditorComponent);
 
-var _a;
+var _a, _b;
 //# sourceMappingURL=editor.component.js.map
 
 /***/ }),
@@ -585,11 +603,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var CollaborationService = (function () {
     function CollaborationService() {
     }
-    CollaborationService.prototype.init = function () {
-        this.collaborationSocket = io(window.location.origin, { query: 'message=hehe' });
-        this.collaborationSocket.on('message', function (message) {
-            console.log('message received from server ' + message);
+    // init() {
+    //   this.collaborationSocket = io(window.location.origin, { query : 'message=hehe'});
+    //
+    //   this.collaborationSocket.on('message', (message) => {
+    //       console.log('message received from server ' + message);
+    //   });
+    // }
+    CollaborationService.prototype.init = function (sessionId, editor) {
+        this.collaborationSocket = io(window.location.origin, { query: 'sessionId=' + sessionId });
+        this.collaborationSocket.on('change', function (delta) {
+            delta = JSON.parse(delta);
+            editor.lastAppliedChange = delta;
+            editor.getSession().getDocument().applyDeltas([delta]);
         });
+    };
+    CollaborationService.prototype.change = function (delta) {
+        this.collaborationSocket.emit('change', delta);
     };
     return CollaborationService;
 }());

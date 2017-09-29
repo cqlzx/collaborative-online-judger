@@ -340,11 +340,17 @@ var EditorComponent = (function () {
         this.collaborationService.init(this.sessionId, this.editor);
         this.editor.lastAppliedChange = null;
         this.editor.on('change', function (e) {
-            console.log('change from client' + JSON.stringify(e));
+            // console.log('change from client' + JSON.stringify(e));
             if (_this.editor.lastAppliedChange != e) {
                 _this.collaborationService.change(JSON.stringify(e));
             }
         });
+        this.editor.getSession().getSelection().on('changeCursor', function () {
+            var cursor = _this.editor.getSession().getSelection().getCursor();
+            // console.log('client cursor move: ' + JSON.stringify(cursor));
+            _this.collaborationService.cursorMove(JSON.stringify(cursor));
+        });
+        this.collaborationService.restoreBuffer();
     };
     EditorComponent.prototype.setLanguage = function (language) {
         this.language = language;
@@ -590,6 +596,7 @@ var _a;
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CollaborationService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__assets_colors__ = __webpack_require__("../../../../../src/assets/colors.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -600,8 +607,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
 var CollaborationService = (function () {
     function CollaborationService() {
+        this.clientInfo = {};
+        this.clientNum = 0;
     }
     // init() {
     //   this.collaborationSocket = io(window.location.origin, { query : 'message=hehe'});
@@ -611,15 +621,43 @@ var CollaborationService = (function () {
     //   });
     // }
     CollaborationService.prototype.init = function (sessionId, editor) {
+        var _this = this;
         this.collaborationSocket = io(window.location.origin, { query: 'sessionId=' + sessionId });
         this.collaborationSocket.on('change', function (delta) {
             delta = JSON.parse(delta);
             editor.lastAppliedChange = delta;
             editor.getSession().getDocument().applyDeltas([delta]);
         });
+        this.collaborationSocket.on('cursorMove', function (cursor) {
+            var session = editor.getSession();
+            cursor = JSON.parse(cursor);
+            var socketId = cursor['socketId'];
+            var x = cursor['row'];
+            var y = cursor['column'];
+            if (socketId in _this.clientInfo) {
+                session.removeMarker(_this.clientInfo[socketId]['marker']);
+            }
+            else {
+                _this.clientInfo[socketId] = {};
+                var css = document.createElement('style');
+                css.type = 'text/css';
+                css.innerHTML = "\n          .editor_cursor_" + socketId + "\n            {\n              position: absolute;\n              background: " + __WEBPACK_IMPORTED_MODULE_1__assets_colors__["a" /* COLORS */][_this.clientNum] + ";\n              z-index: 100;\n              width: 3px !important\n            }";
+                document.body.appendChild(css);
+                _this.clientNum++;
+            }
+            var Range = ace.require('ace/range').Range;
+            var newMarker = session.addMarker(new Range(x, y, x, y + 1), "editor_cursor_" + socketId, true);
+            _this.clientInfo[socketId]['marker'] = newMarker;
+        });
     };
     CollaborationService.prototype.change = function (delta) {
         this.collaborationSocket.emit('change', delta);
+    };
+    CollaborationService.prototype.cursorMove = function (cursor) {
+        this.collaborationSocket.emit('cursorMove', cursor);
+    };
+    CollaborationService.prototype.restoreBuffer = function () {
+        this.collaborationSocket.emit('restoreBuffer');
     };
     return CollaborationService;
 }());
@@ -703,6 +741,56 @@ DataService = __decorate([
 
 var _a;
 //# sourceMappingURL=data.service.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/assets/colors.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return COLORS; });
+var COLORS = [
+    '#ff0000',
+    '#00ff00',
+    '#ffff00',
+    '#0000ff',
+    '#ffc0cb',
+    '#a52a2a',
+    '#00ffff',
+    '#00008b',
+    '#008b8b',
+    '#a9a9a9',
+    '#006400',
+    '#bdb76b',
+    '#8b008b',
+    '#556b2f',
+    '#ff8c00',
+    '#9932cc',
+    '#8b0000',
+    '#e9967a',
+    '#9400d3',
+    '#ff00ff',
+    '#ffd700',
+    '#008000',
+    '#4b0082',
+    '#f0e68c',
+    '#add8e6',
+    '#e0ffff',
+    '#90ee90',
+    '#d3d3d3',
+    '#ffb6c1',
+    '#ffffe0',
+    '#ff00ff',
+    '#800000',
+    '#000080',
+    '#808000',
+    '#ffa500',
+    '#800080',
+    '#800080',
+    '#c0c0c0',
+    '#ffffff'
+];
+//# sourceMappingURL=colors.js.map
 
 /***/ }),
 

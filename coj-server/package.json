@@ -15,6 +15,7 @@
     "body-parser": "^1.18.1",
     "express": "^4.15.4",
     "mongoose": "^4.11.12",
+    "redis": "^2.8.0",
     "socket.io": "^2.0.3"
   }
 }

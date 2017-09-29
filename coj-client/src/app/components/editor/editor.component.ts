@@ -51,11 +51,19 @@ export class EditorComponent implements OnInit {
     this.editor.lastAppliedChange = null;
 
     this.editor.on('change', (e) => {
-      console.log('change from client' + JSON.stringify(e));
+      // console.log('change from client' + JSON.stringify(e));
       if (this.editor.lastAppliedChange != e) {
         this.collaborationService.change(JSON.stringify(e));
       }
     });
+
+    this.editor.getSession().getSelection().on('changeCursor', () => {
+      const cursor = this.editor.getSession().getSelection().getCursor();
+      // console.log('client cursor move: ' + JSON.stringify(cursor));
+      this.collaborationService.cursorMove(JSON.stringify(cursor));
+    });
+
+    this.collaborationService.restoreBuffer();
   }
 
   setLanguage(language: string) {

@@ -44,6 +44,16 @@ export class DataService {
       .catch(this.handleError);
   }
 
+  submitCode(code: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const message = {
+        buildMessage: 'ok',
+        outputMessage: 'hehe'
+      };
+      resolve(JSON.stringify(message));
+    });
+  }
+
   private handleError(error: any): Promise<any> {
     console.log('An error occurs', error);
     return Promise.reject(error.body || error);

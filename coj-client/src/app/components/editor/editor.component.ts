@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { CollaborationService } from '../../services/collaboration.service';
 import { ActivatedRoute, Params } from '@angular/router';
+
+import { CollaborationService } from '../../services/collaboration.service';
+import { DataService } from '../../services/data.service';
+
 
 declare let ace: any;
 
@@ -10,6 +13,8 @@ declare let ace: any;
   styleUrls: ['./editor.component.css']
 })
 export class EditorComponent implements OnInit {
+  buildMessage = '';
+  outputMessage = '';
   editor: any;
   sessionId: string;
   language = 'Java';
@@ -30,6 +35,7 @@ export class EditorComponent implements OnInit {
 
   constructor(
     private collaborationService: CollaborationService,
+    private dataService: DataService,
     private route: ActivatedRoute
   ) { }
 
@@ -73,12 +79,20 @@ export class EditorComponent implements OnInit {
   }
 
   resetEditor() {
+    this.buildMessage = '';
+    this.outputMessage = '';
     this.editor.setValue(this.defaultContent[this.language]);
   }
 
   submit() {
     const userCode = this.editor.getValue();
     console.log(userCode);
-
+    this.dataService.submitCode(userCode)
+      .then((result) => {
+        const message = JSON.parse(result);
+        this.buildMessage = 'Build: ' + message['buildMessage'];
+        this.outputMessage = 'Output: ' + message['outputMessage'];
+      })
+      .catch(error => console.log(error));
   }
 }

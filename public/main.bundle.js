@@ -275,7 +275,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "@media screen {\n  #editor {\n    height: 600px\n  }\n\n  header {\n    margin: 10px 0;\n    height: 40px;\n  }\n\n  footer {\n    margin: 10px 0;\n  }\n\n  #languageSelect {\n    width: 150px;\n  }\n\n  .language-select {\n    margin: 0 20px 5px 0;\n  }\n}\n", ""]);
+exports.push([module.i, "@media screen {\n  #editor {\n    height: 500px\n  }\n\n  header {\n    margin: 10px 0;\n    height: 40px;\n  }\n\n  footer {\n    margin: 10px 0;\n  }\n\n  #languageSelect {\n    width: 150px;\n  }\n\n  .language-select {\n    margin: 0 20px 5px 0;\n  }\n}\n", ""]);
 
 // exports
 
@@ -288,7 +288,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/components/editor/editor.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<section>\n  <header>\n    <select class=\"form-control pull-left language-select\" id=\"languageSelect\" name=\"languageSelect\"\n      (change)=\"setLanguage(language)\" [(ngModel)]=\"language\">\n      <option *ngFor=\"let language of languages\" [value]=\"language\">{{language}}</option>\n    </select>\n\n    <button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#myModal\">\n      Reset\n    </button>\n\n    <!-- Modal -->\n    <div class=\"modal fade\" id=\"myModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\n      <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content\">\n          <div class=\"modal-header\">\n            <h5 class=\"modal-title\" id=\"exampleModalLabel\">Reset to default code</h5>\n            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n              <span aria-hidden=\"true\">&times;</span>\n            </button>\n          </div>\n          <div class=\"modal-body\">\n            Are your sure you want to reset your code?\n          </div>\n          <div class=\"modal-footer\">\n            <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Cancel</button>\n            <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" (click)=\"resetEditor()\">Reset</button>\n          </div>\n        </div>\n      </div>\n    </div>\n\n  </header>\n\n  <div class=\"row\">\n    <div id=\"editor\"></div>\n  </div>\n\n  <footer>\n    <button type=\"button\" class=\"btn btn-success pull-right\" (click)=\"submit()\">Submit</button>\n  </footer>\n</section>\n\n"
+module.exports = "<section>\n  <header>\n    <select class=\"form-control pull-left language-select\" id=\"languageSelect\" name=\"languageSelect\"\n      (change)=\"setLanguage(language)\" [(ngModel)]=\"language\">\n      <option *ngFor=\"let language of languages\" [value]=\"language\">{{language}}</option>\n    </select>\n\n    <button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#myModal\">\n      Reset\n    </button>\n\n    <!-- Modal -->\n    <div class=\"modal fade\" id=\"myModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\n      <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content\">\n          <div class=\"modal-header\">\n            <h5 class=\"modal-title\" id=\"exampleModalLabel\">Reset to default code</h5>\n            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n              <span aria-hidden=\"true\">&times;</span>\n            </button>\n          </div>\n          <div class=\"modal-body\">\n            Are your sure you want to reset your code?\n          </div>\n          <div class=\"modal-footer\">\n            <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Cancel</button>\n            <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" (click)=\"resetEditor()\">Reset</button>\n          </div>\n        </div>\n      </div>\n    </div>\n\n  </header>\n\n  <div class=\"row\">\n    <div id=\"editor\"></div>\n  </div>\n\n  <div class=\"build-message\">{{buildMessage}}</div>\n  <div class=\"output\">{{outputMessage}}</div>\n\n  <footer>\n    <button type=\"button\" class=\"btn btn-success pull-right\" (click)=\"submit()\">Submit</button>\n  </footer>\n</section>\n\n"
 
 /***/ }),
 
@@ -298,8 +298,9 @@ module.exports = "<section>\n  <header>\n    <select class=\"form-control pull-l
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EditorComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_collaboration_service__ = __webpack_require__("../../../../../src/app/services/collaboration.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_collaboration_service__ = __webpack_require__("../../../../../src/app/services/collaboration.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_data_service__ = __webpack_require__("../../../../../src/app/services/data.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -312,10 +313,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var EditorComponent = (function () {
-    function EditorComponent(collaborationService, route) {
+    function EditorComponent(collaborationService, dataService, route) {
         this.collaborationService = collaborationService;
+        this.dataService = dataService;
         this.route = route;
+        this.buildMessage = '';
+        this.outputMessage = '';
         this.language = 'Java';
         this.languages = ['Java', 'Python', 'Javascript'];
         this.defaultContent = {
@@ -358,11 +363,21 @@ var EditorComponent = (function () {
         this.resetEditor();
     };
     EditorComponent.prototype.resetEditor = function () {
+        this.buildMessage = '';
+        this.outputMessage = '';
         this.editor.setValue(this.defaultContent[this.language]);
     };
     EditorComponent.prototype.submit = function () {
+        var _this = this;
         var userCode = this.editor.getValue();
         console.log(userCode);
+        this.dataService.submitCode(userCode)
+            .then(function (result) {
+            var message = JSON.parse(result);
+            _this.buildMessage = 'Build: ' + message['buildMessage'];
+            _this.outputMessage = 'Output: ' + message['outputMessage'];
+        })
+            .catch(function (error) { return console.log(error); });
     };
     return EditorComponent;
 }());
@@ -372,10 +387,10 @@ EditorComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/components/editor/editor.component.html"),
         styles: [__webpack_require__("../../../../../src/app/components/editor/editor.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__services_collaboration_service__["a" /* CollaborationService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_collaboration_service__["a" /* CollaborationService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__services_collaboration_service__["a" /* CollaborationService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_collaboration_service__["a" /* CollaborationService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__services_data_service__["a" /* DataService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__services_data_service__["a" /* DataService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _c || Object])
 ], EditorComponent);
 
-var _a, _b;
+var _a, _b, _c;
 //# sourceMappingURL=editor.component.js.map
 
 /***/ }),
@@ -727,6 +742,15 @@ var DataService = (function () {
             return res.json();
         })
             .catch(this.handleError);
+    };
+    DataService.prototype.submitCode = function (code) {
+        return new Promise(function (resolve, reject) {
+            var message = {
+                buildMessage: 'ok',
+                outputMessage: 'hehe'
+            };
+            resolve(JSON.stringify(message));
+        });
     };
     DataService.prototype.handleError = function (error) {
         console.log('An error occurs', error);

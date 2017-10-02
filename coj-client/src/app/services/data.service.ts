@@ -44,14 +44,15 @@ export class DataService {
       .catch(this.handleError);
   }
 
-  submitCode(code: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const message = {
-        buildMessage: 'ok',
-        outputMessage: 'hehe'
-      };
-      resolve(JSON.stringify(message));
-    });
+  submitCode(code): Promise<any> {
+    const header = new Headers({'content-type': 'application/json'});
+    return this.http.post('api/v1/codes', code, header)
+      .toPromise()
+      .then((res: Response) => {
+        // console.log(res);
+        return res.json();
+      })
+      .catch(this.handleError);
   }
 
   private handleError(error: any): Promise<any> {

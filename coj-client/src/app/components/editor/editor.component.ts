@@ -86,12 +86,16 @@ export class EditorComponent implements OnInit {
 
   submit() {
     const userCode = this.editor.getValue();
-    console.log(userCode);
-    this.dataService.submitCode(userCode)
+    // console.log(userCode);
+    const data = {
+      'language': this.language.toLocaleLowerCase(),
+      'code': userCode
+    };
+
+    this.dataService.submitCode(data)
       .then((result) => {
-        const message = JSON.parse(result);
-        this.buildMessage = 'Build: ' + message['buildMessage'];
-        this.outputMessage = 'Output: ' + message['outputMessage'];
+        this.buildMessage = 'Build: ' + result.buildMessage;
+        this.outputMessage = 'Output: ' + result.outputMessage;
       })
       .catch(error => console.log(error));
   }

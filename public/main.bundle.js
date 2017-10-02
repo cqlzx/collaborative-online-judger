@@ -370,12 +370,15 @@ var EditorComponent = (function () {
     EditorComponent.prototype.submit = function () {
         var _this = this;
         var userCode = this.editor.getValue();
-        console.log(userCode);
-        this.dataService.submitCode(userCode)
+        // console.log(userCode);
+        var data = {
+            'language': this.language.toLocaleLowerCase(),
+            'code': userCode
+        };
+        this.dataService.submitCode(data)
             .then(function (result) {
-            var message = JSON.parse(result);
-            _this.buildMessage = 'Build: ' + message['buildMessage'];
-            _this.outputMessage = 'Output: ' + message['outputMessage'];
+            _this.buildMessage = 'Build: ' + result.buildMessage;
+            _this.outputMessage = 'Output: ' + result.outputMessage;
         })
             .catch(function (error) { return console.log(error); });
     };
@@ -744,13 +747,14 @@ var DataService = (function () {
             .catch(this.handleError);
     };
     DataService.prototype.submitCode = function (code) {
-        return new Promise(function (resolve, reject) {
-            var message = {
-                buildMessage: 'ok',
-                outputMessage: 'hehe'
-            };
-            resolve(JSON.stringify(message));
-        });
+        var header = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'content-type': 'application/json' });
+        return this.http.post('api/v1/codes', code, header)
+            .toPromise()
+            .then(function (res) {
+            console.log(res);
+            return res.json();
+        })
+            .catch(this.handleError);
     };
     DataService.prototype.handleError = function (error) {
         console.log('An error occurs', error);

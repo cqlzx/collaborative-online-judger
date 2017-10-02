@@ -30,4 +30,9 @@ router.post('/problems', jsonParser, function (req, res) {
         });
 });
 
+router.post('/codes', jsonParser, function (req, res) {
+   const userCode = req.body.userCode;
+   const language = req.body.language;
+   res.json({'buildMessage': 'OK', 'outputMessage': 'hahahahahah'});
+});
 module.exports = router;

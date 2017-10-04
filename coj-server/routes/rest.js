@@ -1,10 +1,16 @@
 const express = require('express');
 const router = express.Router();
+
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
+const Client = require('node-rest-client').Client;
+const nodeRestClient = new Client();
+
 const problemService = require('../services/problemService');
 
+EXECUTOR_URL = 'http://localhost:5000/codes';
+nodeRestClient.registerMethod(buildAndRun, EXECUTOR_URL, 'POST');
 
 //GET /api/v1/problems
 router.get('/problems', function (req, res) {
@@ -31,8 +37,22 @@ router.post('/problems', jsonParser, function (req, res) {
 });
 
 router.post('/codes', jsonParser, function (req, res) {
-   const userCode = req.body.userCode;
+   const userCode = req.body.code;
    const language = req.body.language;
-   res.json({'buildMessage': 'OK', 'outputMessage': 'hahahahahah'});
+   // res.json({'buildMessage': 'OK', 'outputMessage': 'hahahahahah'});
+    const data = {
+      'language': language,
+      'userCode': userCode
+    };
+    nodeRestClient.methods.buildAndRun({
+        data: data,
+        header: {'Content-Type': 'application/json'}
+    }, (data, response) => {
+        console.log('data received from executor server');
+        data['buildMessage'] = `${data['build']}`;
+        data['outputMessage'] = `${data['run']}`;
+        res.json(data);
+    });
 });
+
 module.exports = router;

@@ -751,7 +751,7 @@ var DataService = (function () {
         return this.http.post('api/v1/codes', code, header)
             .toPromise()
             .then(function (res) {
-            console.log(res);
+            // console.log(res);
             return res.json();
         })
             .catch(this.handleError);

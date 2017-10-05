@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
 import { CollaborationService } from '../../services/collaboration.service';
 import { DataService } from '../../services/data.service';
@@ -24,7 +25,8 @@ export class EditorComponent implements OnInit {
   constructor(
     private collaborationService: CollaborationService,
     private dataService: DataService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private spinner: Ng4LoadingSpinnerService
   ) { }
 
   ngOnInit() {
@@ -73,6 +75,7 @@ export class EditorComponent implements OnInit {
   }
 
   submit() {
+    this.spinner.show();
     const userCode = this.editor.getValue();
     // console.log(userCode);
     const data = {
@@ -82,6 +85,7 @@ export class EditorComponent implements OnInit {
 
     this.dataService.submitCode(data)
       .then((result) => {
+        this.spinner.hide();
         this.buildMessage = 'Build: ' + result.buildMessage;
         this.outputMessage = 'Output: ' + result.outputMessage;
       })

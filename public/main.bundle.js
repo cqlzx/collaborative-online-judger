@@ -267,6 +267,20 @@ var _a, _b;
 
 /***/ }),
 
+/***/ "../../../../../src/app/components/editor/default.codes.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DEFAULT_CODES; });
+var DEFAULT_CODES = {
+    'Java': "public class Solution {\n    public static void main(String[] args) {\n        //Your code starts here...\n    }\n}",
+    'Python': "class Solution(object):\n    def main():\n        # Your code start here...\n    \n    \n    if __name__ == \"__main__\":\n        main()",
+    'Javascript': "var solution = function() {\n    //Your code start here...\n};\n\nsolution();"
+};
+//# sourceMappingURL=default.codes.js.map
+
+/***/ }),
+
 /***/ "../../../../../src/app/components/editor/editor.component.css":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -301,6 +315,7 @@ module.exports = "<section>\n  <header>\n    <select class=\"form-control pull-l
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_collaboration_service__ = __webpack_require__("../../../../../src/app/services/collaboration.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_data_service__ = __webpack_require__("../../../../../src/app/services/data.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__default_codes__ = __webpack_require__("../../../../../src/app/components/editor/default.codes.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -314,6 +329,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var EditorComponent = (function () {
     function EditorComponent(collaborationService, dataService, route) {
         this.collaborationService = collaborationService;
@@ -323,11 +339,7 @@ var EditorComponent = (function () {
         this.outputMessage = '';
         this.language = 'Java';
         this.languages = ['Java', 'Python', 'Javascript'];
-        this.defaultContent = {
-            'Java': "public class Solution {\n    public static void main(String[] args) {\n        //Your code starts here...\n    }\n}",
-            'Python': "class Solution(object):\n    def main():\n        # Your code start here...",
-            'Javascript': "var solution = function() {\n    //Your code start here...\n};"
-        };
+        this.defaultContent = __WEBPACK_IMPORTED_MODULE_4__default_codes__["a" /* DEFAULT_CODES */];
     }
     EditorComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -746,9 +758,9 @@ var DataService = (function () {
         })
             .catch(this.handleError);
     };
-    DataService.prototype.submitCode = function (code) {
+    DataService.prototype.submitCode = function (data) {
         var header = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'content-type': 'application/json' });
-        return this.http.post('api/v1/codes', code, header)
+        return this.http.post('api/v1/codes', data, header)
             .toPromise()
             .then(function (res) {
             // console.log(res);

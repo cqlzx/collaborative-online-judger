@@ -3,7 +3,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 
 import { CollaborationService } from '../../services/collaboration.service';
 import { DataService } from '../../services/data.service';
-
+import { DEFAULT_CODES } from './default.codes';
 
 declare let ace: any;
 
@@ -19,19 +19,7 @@ export class EditorComponent implements OnInit {
   sessionId: string;
   language = 'Java';
   languages: string[] = ['Java', 'Python', 'Javascript'];
-  defaultContent = {
-    'Java': `public class Solution {
-    public static void main(String[] args) {
-        //Your code starts here...
-    }
-}`,
-    'Python': `class Solution(object):
-    def main():
-        # Your code start here...`,
-    'Javascript': `var solution = function() {
-    //Your code start here...
-};`
-  };
+  defaultContent = DEFAULT_CODES;
 
   constructor(
     private collaborationService: CollaborationService,

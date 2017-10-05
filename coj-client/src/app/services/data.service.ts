@@ -44,9 +44,9 @@ export class DataService {
       .catch(this.handleError);
   }
 
-  submitCode(code): Promise<any> {
+  submitCode(data): Promise<any> {
     const header = new Headers({'content-type': 'application/json'});
-    return this.http.post('api/v1/codes', code, header)
+    return this.http.post('api/v1/codes', data, header)
       .toPromise()
       .then((res: Response) => {
         // console.log(res);

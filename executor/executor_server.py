@@ -2,6 +2,7 @@ import json
 from flask import Flask
 from flask import jsonify
 from flask import request
+import executor_service
 
 app = Flask(__name__)
 
@@ -21,9 +22,12 @@ def build_and_run():
 
     print 'language and code got. Language: %s, Code: %s' % (language, code)
 
-    return jsonify({'build': 'OKKKKKK', 'run': 'runnnnnn'})
+    result = executor_service.build_and_run(language, code)
+
+    return jsonify(result)
 
 
 
 if __name__ == '__main__':
+    executor_service.load_image()
     app.run(debug = True)

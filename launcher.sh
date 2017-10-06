@@ -8,9 +8,9 @@ cd ./coj-server
 npm install
 nodemon ./server.js &
 
-cd ../coj-client/
-npm install
-ng build --watch &
+#cd ../coj-client/
+#npm install
+#ng build --watch &
 
 cd ../executor
 pip install -r dependencies.txt

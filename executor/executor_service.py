@@ -11,7 +11,7 @@ IMAGE_NAME = 'cqzxlong/coj-executor'
 CONTAINER_NAME = '%s:latest' % IMAGE_NAME
 client = docker.from_env()
 
-CURRENT_DIR = os.path.dirname(os.path.relpath(__file__))
+CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 TMP_FILES_DIR = '%s/tmp' % CURRENT_DIR
 
 
